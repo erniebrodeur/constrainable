@@ -107,7 +107,7 @@ PLATFORMS
 
 DEPENDENCIES
   bump
-  bundler
+  bundler (~> 1.16)
   constrainable!
   guard
   guard-bundler
@@ -115,8 +115,8 @@ DEPENDENCIES
   guard-rubocop
   guard-yard
   pry
-  rake
-  rspec
+  rake (~> 10.0)
+  rspec (~> 3.0)
   rubocop
   rubocop-rspec
   simplecov
