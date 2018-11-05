@@ -53,10 +53,10 @@ class Constrained
   constrain_method_by :this, :required_keyword, :yo
 
   def this(yo: nil)
-    puts "should only be called if #{yo} is available."
+    "should only be called if #{yo} is available."
   end
 end
 
 c = Constrained.new
-puts c.this(yo: 'yo')
-puts c.this
+puts "c.this(yo: 'yo') = #{c.this(yo: 'yo')}"
+puts "c.this = #{c.this}"
