@@ -12,22 +12,22 @@ module Constrainable
 
       return if method_name[0..1] == "__" || instantiated_obj.methods.include?(:"__#{method_name}")
 
-      Constrainable.rebind_method self, instantiated_obj, method_name
-      Constrainable.create_defined_methods self, instantiated_obj, method_name
+      Constrainable.rebind_method instantiated_obj, method_name
+      Constrainable.create_defined_methods instantiated_obj, method_name
     end
   end
 
   module_function
 
-  def rebind_method(object, instantiated_obj, method_name)
+  def rebind_method(instantiated_obj, method_name)
     instantiated_obj.method method_name
     original_method = instantiated_obj.method method_name
     unbound_method = original_method.unbind
-    object.send :remove_method, method_name
-    object.send :define_method, "__#{method_name}".to_sym, unbound_method
+    instantiated_obj.class.send :remove_method, method_name
+    instantiated_obj.class.send :define_method, "__#{method_name}".to_sym, unbound_method
   end
 
-  def create_defined_methods(object, instantiated_obj, method_name)
+  def create_defined_methods(instantiated_obj, method_name)
     define_method method_name do |*args|
       puts 'constrainment check'
       m = method "__#{method_name}".to_sym
