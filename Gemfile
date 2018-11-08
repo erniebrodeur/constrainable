@@ -14,7 +14,7 @@ group :development do
   gem 'yard'
 end
 
-group :development, :optional => true do
+group :development, optional: true do
   gem 'guard'
   gem 'guard-bundler'
   gem 'guard-rspec'

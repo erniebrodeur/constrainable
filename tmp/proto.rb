@@ -6,51 +6,13 @@
 # now when triggering that method, it calls into constrain_method
 # constrained_method walks through the class constraints, and if it finds one, exits.
 require 'pry'
-
-
-module Constrainable
-  # this is the magic bit that adds Class scoped methods
-  def self.included(object)
-    object.extend ClassMethods
-
-    def object.method_added(method_name)
-      instantiated_obj = allocate
-      if method_name[0..1] == "__" || instantiated_obj.methods.include?(:"__#{method_name}")
-        puts "Previously added #{method_name}"
-      else
-        puts "added #{method_name} via constrainable"
-        instantiated_obj.method method_name
-        original_method = instantiated_obj.method method_name
-        unbound_method = original_method.unbind
-        remove_method method_name
-        define_method "__#{method_name}".to_sym, unbound_method
-
-        define_method method_name do |*args|
-          puts 'constrainment check'
-          m = method "__#{method_name}".to_sym
-          self.send(:raise, ArgumentError, "constrainment error for #{instantiated_obj.class}::#{method_name}(#{args})") if args.empty?
-          m.call *args
-        end
-      end
-    end
-  end
-
-  module ClassMethods
-    def constrain_method_by(method, constraint_class, *args);end
-    def constrain_by(constraint_class, *args);end
-  end
-
-  module_function
-  def constrained_method_wrapper(method_name, *args)
-    puts "Constraint check this bitch!"
-  end
-end
+require 'constrainable'
 
 class Constrained
   include Constrainable
 
   constrain_by :global_constraint
-  constrain_method_by :this, :required_keyword, :yo
+  # constrain_method_by :this, :required_keyword, :yo
 
   def this(yo: nil)
     "should only be called if #{yo} is available."
@@ -60,3 +22,98 @@ end
 c = Constrained.new
 puts "c.this(yo: 'yo') = #{c.this(yo: 'yo')}"
 puts "c.this = #{c.this}"
+
+
+
+
+
+
+
+
+# module Constrainable
+#   # def constrain(*args); end
+
+#   # generate a 'named' method as part of the dsl (to supply required_keyword below).
+#   # attach that method to Constrainable
+#   # by including Constrainable (or Constrainable::ClassMethods or whatever) you will end up with a new
+#   # method called required_keyword
+#   module_function
+#   def required_keyword(binding: binding, arguments: arguments)
+#     raise 'AbstractClass'
+#   end
+# end
+
+# # abstract
+# class Constraint
+#   def generate_named_method
+#   end
+
+#   def call(binding: nil, arguments: nil)
+#   end
+# end
+
+# class RequiredKeyword < Constraint
+#   def method_name
+#     :required_keyword # get this automagically (in the future)
+#   end
+
+#   def call(binding: nil, arguments: nil)
+#   # figure out how to pass the binding
+#   # dig and find the local bit from the binding.
+#   raise ArgumentError, "#{keyword} was not supplied" unless value
+# end
+
+# class A
+#   include Constrainable
+
+#   @constraints = {
+#     RequiredArgument => %i[keyword two three]
+#   }
+
+#   # later on
+#   constraints.each {|c, arguments| c.call(binding: binding, arguments: arguments) }
+
+#   # begin
+#   #   constrain :some_method, :arg1, kind_of: String, required: true
+#   #   constrain :some_method, :arg2, kind_of: String, required: true
+#   #   constrain :some_method, :two, kind_of: String, required: true
+#   #   constrain :some_method, :three, kind_of: String, required: true
+#   # end
+
+#   # by :required_keywords, :some_method, kind_of: %i[keyword two three]
+#   # by :user_signed_in, :some_method, user: user
+
+#   # Constrainable.by_require_keywords :some_method, %i[keyword two three]
+#   # Constrainable.by_kind_of :some_method, %i[keyword two three], [String, nil]
+
+#   # by_user_signed_in :some_method, user
+#   # by_require_keywords %i[keyword two three]
+#   # by_kind_of [String, nil], %i[keyword two three]
+#   # by_kind_of Array, %i[arg1 arg2]
+#   # this call will supply the binding and the method_name (since it's in scope).
+
+#   def some_method(arg1, arg2, keyword: nil, two: nil, three: nil)
+#     raise ArgumentError, 'keyword must be present' unless keyword
+#     raise ArgumentError, 'two must be present' unless two
+#     raise ArgumentError, 'three must be present' unless three
+#     # -> factors to this
+#     [keyword, two, three].each { |v| raise ArgumentError, "#{v} must be present" unless v }
+#     # -> factors to this
+#     required_keyword %i[keyword two three]
+
+#     puts arg1, arg2, keyword, two, three
+#   end
+# end
+
+# module Constrainable
+#   module By
+#     module UserSignedIn
+#       module_function
+#       def wrapper(method, *args)
+#         puts 'blow_up' unless args.any?
+
+#         send method, args
+#       end
+#     end
+#   end
+# end
