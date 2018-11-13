@@ -216,9 +216,9 @@ end
 
   # putting it outside the method (somewhere in the class) brings us to a factor of one, but zero
   # additional lines
-  constrain :method, by_required_keywords(%i[keyword two three])
-  constrain_method :some_method, by(:required_keywords,  %i[keyword two three])
-  def some_method(arg1, arg2, keyword: nil, two: nil, three: nil)
+    constrain :method, by: { required_keywords: %i[keyword two three] }
+    constrain_class by: { signed_in: true }
+    def some_method(arg1, arg2, keyword: nil, two: nil, three: nil)
     puts arg1, arg2, keyword, two, three
   end
 end

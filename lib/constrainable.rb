@@ -12,12 +12,11 @@ module Constrainable
 
       return if method_name[0..1] == "__" || instantiated_obj.methods.include?(:"__#{method_name}")
 
-      Constrainable.rebind_method instantiated_obj, method_name
-      Constrainable.create_defined_methods instantiated_obj, method_name
+      rebind_method instantiated_obj, method_name
+      create_defined_methods instantiated_obj, method_name
     end
   end
 
-  module_function
 
   def rebind_method(instantiated_obj, method_name)
     instantiated_obj.method method_name
