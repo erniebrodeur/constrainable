@@ -1,5 +1,10 @@
-require 'constrainable/version'
-require 'constrainable/included_class_methods'
+require "constrainable.rb"
+require "constrainable/constraint.rb"
+require "constrainable/constraints.rb"
+require "constrainable/constraints/required_keyword.rb"
+require "constrainable/included_class_methods.rb"
+require "constrainable/included_instance_methods.rb"
+require "constrainable/version.rb"
 
 # constraint system that prevents unwanted method calls
 module Constrainable
@@ -8,6 +13,7 @@ module Constrainable
     object.extend IncludedClassMethods
 
     def object.method_added(method_name)
+
       instantiated_obj = allocate
 
       return if method_name[0..1] == "__" || instantiated_obj.methods.include?(:"__#{method_name}")
@@ -17,8 +23,10 @@ module Constrainable
     end
   end
 
+  # instance methods go here with def name;end
 
-  def rebind_method(instantiated_obj, method_name)
+  # classic class methods with def self.name;end
+  def self.rebind_method(instantiated_obj, method_name)
     instantiated_obj.method method_name
     original_method = instantiated_obj.method method_name
     unbound_method = original_method.unbind
@@ -26,7 +34,7 @@ module Constrainable
     instantiated_obj.class.send :define_method, "__#{method_name}".to_sym, unbound_method
   end
 
-  def create_defined_methods(instantiated_obj, method_name)
+  def self.create_defined_methods(instantiated_obj, method_name)
     define_method method_name do |*args|
       puts 'constrainment check'
       m = method "__#{method_name}".to_sym
@@ -35,7 +43,7 @@ module Constrainable
     end
   end
 
-  def constrained_method_wrapper(_method_name, *_args)
+  def self.constrained_method_wrapper(_method_name, *_args)
     puts "Constraint check this bitch!"
   end
 end

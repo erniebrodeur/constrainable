@@ -23,6 +23,11 @@ task :generate_spec_files do
   end
 end
 
+desc 'generate a require block'
+task :generate_require_block do
+  puts Dir.glob("lib/**/*.rb").map { |d| "require \"#{d.gsub('lib/', '')}\"" }.sort
+end
+
 # automagical updating
 desc "updates for various bits of the development environment."
 
