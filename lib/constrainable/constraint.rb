@@ -5,11 +5,13 @@ module Constrainable
     attr_accessor :with
 
     def initialize(target: nil, by: nil, with: nil)
-      nil
-    end
+      raise ArgumentError, 'target is a required keyword' unless target
+      raise ArgumentError, 'by is a required keyword' unless by
+      raise ArgumentError, 'with is a required keyword' unless with
 
-    def trigger(*args)
-      # constrained?
+      @target = target
+      @by = by
+      @with = with
     end
 
     def constrained?(*args)
@@ -18,13 +20,6 @@ module Constrainable
 
     def exception_message(*args)
       raise
-    end
-
-    private
-
-    def define_type
-      # if type :method
-      # if type :self
     end
   end
 end

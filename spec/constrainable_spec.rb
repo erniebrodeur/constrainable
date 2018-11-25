@@ -26,11 +26,8 @@ describe Constrainable do
   end
 
   describe '::constrained_method_wrapper' do
-    it "is expected to check the constraint table"
+    it "is expected to call constraints.trigger with the provided arguments"
     it "is expected to yield to the wrapped method"
     it "is expected to return the response from the wrapped method"
-    context "when a constraint is found" do
-      it "is expected to raise an exception"
-    end
   end
 end

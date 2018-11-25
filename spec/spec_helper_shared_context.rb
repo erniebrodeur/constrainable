@@ -10,7 +10,11 @@ RSpec.shared_context "with harness" do
 end
 
 RSpec.shared_context "with constraint" do
-  let(:test_constraint) { TestConstraint.new target: :method, by: :this, with: :that}
+  let(:target) { :a_method }
+  let(:by) { :required }
+  let(:with) { String }
+  let(:call_params) {{ target: target, by: by, with: with}}
+  let(:test_constraint) { TestConstraint.new call_params }
 
   before do
     class TestConstraint < Constrainable::Constraint
@@ -23,4 +27,11 @@ RSpec.shared_context "with constraint" do
       end
     end
   end
+end
+
+RSpec.shared_context "with constraints" do
+  include_context "with constraint"
+  let(:constraint) { test_constraint }
+  let(:collection) { [constraint] }
+  let(:constraints) { Constrainable::Constraints.new collection}
 end
