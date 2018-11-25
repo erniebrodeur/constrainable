@@ -7,8 +7,13 @@ require 'spec_helper'
 # - target (method name or class / self / token for class)
 # - by (what we want to restrain by (type, required, block))
 # - with (any additional arguments the block needs)
-
 describe Constrainable::Constraint do
+  include_context "with harness"
+  include_context "with constraint"
+  subject { TestConstraint.new(target: :method, by: :required, with: String) }
+
+  let(:described_class) { TestConstraint }
+
   it { is_expected.to have_attributes(target: nil) }
   it { is_expected.to have_attributes(by: nil) }
   it { is_expected.to have_attributes(with: nil) }
@@ -18,17 +23,29 @@ describe Constrainable::Constraint do
   it { is_expected.to respond_to(:exception_message) }
 
   describe "#constrained?" do
+    let(:value) { false }
+
     context "when the test fails" do
-      it "is expected to return true"
+      let(:value) { true }
+
+      it { expect(test_constraint.constrained?(value)).to be true }
     end
 
-    it "is expected to return false"
+    it { expect(test_constraint.constrained?(value)).to be false }
   end
 
   describe "#trigger" do
-    it "is expected to call constrained?"
+    it "is expected to call constrained?" do
+      allow(test_constraint).to receive(:constrained?).and_return(true)
+      test_constraint.trigger true
+      expect(test_constraint).to have_received(:constrained?).with(true)
+    end
 
     context "when constrained is false" do
+      before do
+        allow(test_constraint).to receive(:constrained?).and_return(false)
+      end
+
       it "is expected to call the original method with arguments"
       it "is expected to return the result of the original method"
     end
@@ -81,11 +98,3 @@ end
 # # - define - type, block to check (new)
 # # - setup in class - specific method, specific arguments for check (constrain by: with:)
 # # - call before method - pass in arguments on the way to the method (*args)
-
-# # for every constraint we have two binding points per constraint.
-# # what we are constraining (single method or whole class)
-# # what we are constraining by (type, required, block)
-# # so the top level constraint class needs attributes:
-# # - target (method name or class / self / token for class)
-# # - by (what we want to restrain by (type, required, block))
-# # - with (any additional arguments the block needs)

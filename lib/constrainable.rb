@@ -13,7 +13,6 @@ module Constrainable
     object.extend IncludedClassMethods
 
     def object.method_added(method_name)
-
       instantiated_obj = allocate
 
       return if method_name[0..1] == "__" || instantiated_obj.methods.include?(:"__#{method_name}")
