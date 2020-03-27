@@ -21,28 +21,4 @@ module Constrainable
       create_defined_methods instantiated_obj, method_name
     end
   end
-
-  # instance methods go here with def name;end
-
-  # classic class methods with def self.name;end
-  def self.rebind_method(instantiated_obj, method_name)
-    instantiated_obj.method method_name
-    original_method = instantiated_obj.method method_name
-    unbound_method = original_method.unbind
-    instantiated_obj.class.send :remove_method, method_name
-    instantiated_obj.class.send :define_method, "__#{method_name}".to_sym, unbound_method
-  end
-
-  def self.create_defined_methods(instantiated_obj, method_name)
-    define_method method_name do |*args|
-      puts 'constrainment check'
-      m = method "__#{method_name}".to_sym
-      send(:raise, ArgumentError, "constrainment error for #{instantiated_obj.class}::#{method_name}(#{args})") if args.empty?
-      m.call(*args)
-    end
-  end
-
-  def self.constrained_method_wrapper(_method_name, *_args)
-    puts "Constraint check this bitch!"
-  end
 end

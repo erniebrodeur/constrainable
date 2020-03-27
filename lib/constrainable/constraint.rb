@@ -14,11 +14,11 @@ module Constrainable
       @with = with
     end
 
-    def constrained?(*args)
+    def constrained?(*_args)
       raise
     end
 
-    def exception_message(*args)
+    def exception_message(*_args)
       raise
     end
   end

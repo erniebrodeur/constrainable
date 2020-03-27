@@ -7,9 +7,6 @@ describe Constrainable do
   # let(:described_class) { Harness }
 
   it { is_expected.to be_a_kind_of Constrainable } # rubocop: disable RSpec/DescribedClass
-  it { expect(described_class).to respond_to(:rebind_method).with(2).arguments }
-  it { expect(described_class).to respond_to(:create_defined_methods).with(2).arguments }
-  it { expect(described_class).to respond_to(:constrained_method_wrapper).with(2).arguments }
 
   describe '::rename_method' do
     it "is expected to rename a method for the instantited object"

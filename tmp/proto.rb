@@ -11,7 +11,7 @@ require 'constrainable'
 class Constrained
   include Constrainable
 
-  constrain_by :global_constraint
+  constrain :global_constraint
   # constrain_method_by :this, :required_keyword, :yo
 
   def this(yo: nil)

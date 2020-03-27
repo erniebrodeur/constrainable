@@ -13,7 +13,7 @@ RSpec.shared_context "with constraint" do
   let(:target) { :a_method }
   let(:by) { :required }
   let(:with) { String }
-  let(:call_params) {{ target: target, by: by, with: with}}
+  let(:call_params) { { target: target, by: by, with: with } }
   let(:test_constraint) { TestConstraint.new call_params }
 
   before do
@@ -33,5 +33,5 @@ RSpec.shared_context "with constraints" do
   include_context "with constraint"
   let(:constraint) { test_constraint }
   let(:collection) { [constraint] }
-  let(:constraints) { Constrainable::Constraints.new collection}
+  let(:constraints) { Constrainable::Constraints.new collection }
 end

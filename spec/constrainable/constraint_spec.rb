@@ -10,6 +10,7 @@ require 'spec_helper'
 describe Constrainable::Constraint do
   include_context "with harness"
   include_context "with constraint"
+
   subject { test_constraint }
 
   let(:described_class) { TestConstraint }
